@@ -17,40 +17,35 @@ impl Board {
 
     // sets up the board with default position
     pub fn init_new(&mut self) {
-        // Set up Black pieces
-        self.board[0][0] = Piece::Rook(Color::Black);
-        self.board[0][1] = Piece::Knight(Color::Black);
-        self.board[0][2] = Piece::Bishop(Color::Black);
-        self.board[0][3] = Piece::King(Color::Black);
-        self.board[0][4] = Piece::Queen(Color::Black);
-        self.board[0][5] = Piece::Bishop(Color::Black);
-        self.board[0][6] = Piece::Knight(Color::Black);
-        self.board[0][7] = Piece::Rook(Color::Black);
+        // Black pieces
+        let back_rank_black = [
+            Piece::Rook(Color::Black),
+            Piece::Knight(Color::Black),
+            Piece::Bishop(Color::Black),
+            Piece::King(Color::Black),
+            Piece::Queen(Color::Black),
+            Piece::Bishop(Color::Black),
+            Piece::Knight(Color::Black),
+            Piece::Rook(Color::Black),
+        ];
+        let back_rank_white = [
+            Piece::Rook(Color::White),
+            Piece::Knight(Color::White),
+            Piece::Bishop(Color::White),
+            Piece::King(Color::White),
+            Piece::Queen(Color::White),
+            Piece::Bishop(Color::White),
+            Piece::Knight(Color::White),
+            Piece::Rook(Color::White),
+        ];
+
+        self.board[0] = back_rank_black.to_vec();
+        self.board[7] = back_rank_white.to_vec();
 
         for i in 0..8 {
             self.board[1][i] = Piece::Pawn(Color::Black);
-        }
-
-        // set up empty slots
-        for i in 2..6 {
-            for j in 0..8 {
-                self.board[i][j] = Piece::Empty;
-            }
-        }
-
-        // set up white pieces
-        for i in 0..8 {
             self.board[6][i] = Piece::Pawn(Color::White);
         }
-
-        self.board[7][0] = Piece::Rook(Color::White);
-        self.board[7][1] = Piece::Knight(Color::White);
-        self.board[7][2] = Piece::Bishop(Color::White);
-        self.board[7][3] = Piece::King(Color::White);
-        self.board[7][4] = Piece::Queen(Color::White);
-        self.board[7][5] = Piece::Bishop(Color::White);
-        self.board[7][6] = Piece::Knight(Color::White);
-        self.board[7][7] = Piece::Rook(Color::White);
     }
 
     // prints the board to the terminal
