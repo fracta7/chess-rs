@@ -1,5 +1,3 @@
-use crate::board::Board;
-
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Color {
     White,
@@ -30,15 +28,15 @@ impl Piece {
             Piece::King(_) => 6,
         }
     }
-    pub fn can_move(&self, board: &Board, x: usize, y: usize) -> bool {
-        match board.board[x][y] {
-            Piece::Empty => return false,
-            Piece::Pawn(_) => return true,
-            Piece::Rook(_) => return true,
-            Piece::Knight(_) => return true,
-            Piece::Bishop(_) => return true,
-            Piece::Queen(_) => return true,
-            Piece::King(_) => return true,
+    pub fn get_color(&self) -> Option<Color> {
+        match self {
+            Piece::Pawn(color) => Some(*color),
+            Piece::Rook(color) => Some(*color),
+            Piece::Knight(color) => Some(*color),
+            Piece::Bishop(color) => Some(*color),
+            Piece::Queen(color) => Some(*color),
+            Piece::King(color) => Some(*color),
+            Piece::Empty => None,
         }
     }
 }
