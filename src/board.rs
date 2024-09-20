@@ -66,10 +66,10 @@ impl Board {
     }
 
     pub fn move_piece(&mut self, mv: &Movement) {
-        let piece = self.board[mv.x][mv.y];
+        let piece = self.board[mv.x][mv.y].clone();
         self.board[mv.x][mv.y] = Piece::Empty;
         if self.board[mv.dx][mv.dy] != Piece::Empty {
-            self.captured_pieces.push(self.board[mv.dx][mv.dy]);
+            self.captured_pieces.push(self.board[mv.dx][mv.dy].clone());
         }
         self.board[mv.dx][mv.dy] = piece;
     }
