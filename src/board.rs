@@ -14,6 +14,7 @@ impl Board {
     pub fn new() -> Self {
         let board = Board {
             board: vec![vec![Piece::Empty; 8]; 8],
+            captured_pieces: vec![],
         };
 
         return board;
