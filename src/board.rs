@@ -1,8 +1,12 @@
-use crate::piece::{Color, Piece};
+use crate::{
+    game::Movement,
+    piece::{Color, Piece},
+};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Board {
     pub board: Vec<Vec<Piece>>,
+    pub captured_pieces: Vec<Piece>,
 }
 
 impl Board {
@@ -59,6 +63,15 @@ impl Board {
             }
             println!();
         }
+    }
+
+    pub fn move_piece(&mut self, mv: &Movement) {
+        let piece = self.board[mv.x][mv.y];
+        self.board[mv.x][mv.y] = Piece::Empty;
+        if self.board[mv.dx][mv.dy] != Piece::Empty {
+            self.captured_pieces.push(self.board[mv.dx][mv.dy]);
+        }
+        self.board[mv.dx][mv.dy] = piece;
     }
 }
 
