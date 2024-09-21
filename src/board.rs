@@ -2,6 +2,8 @@ use crate::{
     game::Movement,
     piece::{Color, Piece},
 };
+extern crate termion;
+use termion::{color, style};
 
 #[derive(Debug, Clone)]
 pub struct Board {
@@ -52,14 +54,50 @@ impl Board {
     // prints the board to the terminal
     pub fn print(&self) {
         for i in 0..8 {
+            print!(
+                "{}{}{} {}{}",
+                style::Blink,
+                color::Fg(color::LightCyan),
+                get_letter(i),
+                color::Fg(color::Reset),
+                style::Reset
+            );
             for j in 0..8 {
-                print!("{}", self.board[i][j].to_number());
+                print!(
+                    "{}{}{}{}{}{}",
+                    color::Fg(color::Red),
+                    style::Underline,
+                    color::Bg(color::LightWhite),
+                    self.board[i][j].to_emoji(),
+                    color::Bg(color::Reset),
+                    style::Reset
+                );
+
                 if j != 7 {
-                    print!("|");
+                    print!(
+                        "{}{}|{}{}",
+                        style::Underline,
+                        color::Bg(color::LightWhite),
+                        color::Bg(color::Reset),
+                        style::Reset
+                    );
                 }
             }
             println!();
         }
+        for i in 0..=8 {
+            if i == 0 {
+                print!("  ");
+                continue;
+            }
+            print!(
+                "{}{} {}",
+                color::Fg(color::LightCyan),
+                i,
+                color::Fg(color::Reset),
+            );
+        }
+        println!()
     }
 
     pub fn move_piece(&mut self, mv: &Movement) {
@@ -99,4 +137,19 @@ pub fn get_xy(xy: &str) -> (usize, usize) {
         _ => 8,
     };
     return (x, y);
+}
+
+fn get_letter(y: usize) -> String {
+    let letter = match y {
+        0 => "a",
+        1 => "b",
+        2 => "c",
+        3 => "d",
+        4 => "e",
+        5 => "f",
+        6 => "g",
+        7 => "h",
+        _ => panic!("Incorrect coordinates!"),
+    };
+    letter.to_string()
 }

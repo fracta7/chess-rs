@@ -207,7 +207,7 @@ fn get_king_pos(board: &Board, is_white: bool) -> (usize, usize) {
     pos
 }
 
-fn is_check(board: &Board, is_white: bool) -> bool {
+pub fn is_check(board: &Board, is_white: bool) -> bool {
     let king_pos = get_king_pos(board, is_white);
     for i in 0..8 {
         for j in 0..8 {
@@ -225,4 +225,43 @@ fn is_check(board: &Board, is_white: bool) -> bool {
         }
     }
     false
+}
+
+pub fn is_checkmate(board: &Board, is_white: bool) -> bool {
+    if !is_check(board, is_white) {
+        return false;
+    }
+
+    for i in 0..8 {
+        for j in 0..8 {
+            let piece = board.board[i][j];
+
+            if piece == Piece::Empty
+                || piece.get_color() != Some(if is_white { Color::White } else { Color::Black })
+            {
+                continue;
+            }
+
+            for dy in 0..8 {
+                for dx in 0..8 {
+                    let mv = Movement { x: i, y: j, dx, dy };
+
+                    // Check if the move is valid
+                    if can_move(board, &mv, is_white) {
+                        // Simulate the move
+                        let mut temp_board = board.clone();
+                        temp_board.move_piece(&mv);
+
+                        // If this move results in the player not being in check anymore, it's not checkmate
+                        if !is_check(&temp_board, is_white) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // If no move can prevent the check, it is checkmate
+    true
 }
