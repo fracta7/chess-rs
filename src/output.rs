@@ -85,7 +85,7 @@ impl Board {
                 let white_captured: Vec<&Piece> = self
                     .captured_pieces
                     .iter()
-                    .filter(|&&x| x.get_color().unwrap() == Color::Black)
+                    .filter(|&&x| x.get_color().unwrap() == Color::White)
                     .collect();
                 print!("\t");
                 for i in white_captured {
@@ -95,7 +95,7 @@ impl Board {
                 let black_captured: Vec<&Piece> = self
                     .captured_pieces
                     .iter()
-                    .filter(|&&x| x.get_color().unwrap() == Color::White)
+                    .filter(|&&x| x.get_color().unwrap() == Color::Black)
                     .collect();
                 print!("\t");
                 for i in black_captured {
@@ -108,12 +108,31 @@ impl Board {
     }
 }
 
-pub fn output_loop(board: &Board, side: String, is_selection: bool, xy: Option<(usize, usize)>) {
+pub fn output(board: &Board, is_whites_move: bool, is_selection: bool, xy: Option<(usize, usize)>) {
+    let side = if is_whites_move { "(white)" } else { "(black)" };
     clear_screen();
     print_info();
     if is_selection {
         board.print(None, false);
-        println!("Select a piece: {}", side);
+        if is_whites_move {
+            println!(
+                "Select a piece: {}{}{}{}{}",
+                color::Bg(color::LightWhite),
+                color::Fg(color::LightBlack),
+                side,
+                color::Bg(color::Reset),
+                color::Fg(color::Reset)
+            );
+        } else {
+            println!(
+                "Select a piece: {}{}{}{}{}",
+                color::Bg(color::LightBlack),
+                color::Fg(color::LightWhite),
+                side,
+                color::Bg(color::Reset),
+                color::Fg(color::Reset)
+            );
+        }
     } else {
         board.print(xy, true);
         println!("Select where to move: {}", side);

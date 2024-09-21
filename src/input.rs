@@ -3,15 +3,14 @@ use std::io::{self, Write};
 use crate::{
     board::{get_xy, Board},
     game::{can_move, is_checkmate, Movement},
-    output::output_loop,
+    output::output,
     piece::Color,
 };
 
 pub fn input_loop(board: &mut Board) {
     let mut is_whites_move = true;
     loop {
-        let side = if is_whites_move { "(white)" } else { "(black)" };
-        output_loop(board, side.to_string(), true, None);
+        output(board, is_whites_move, true, None);
         io::stdout().flush().unwrap();
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Invalid input");
@@ -39,7 +38,7 @@ pub fn input_loop(board: &mut Board) {
             println!("No piece at this location!");
             continue;
         }
-        output_loop(board, side.to_string(), false, Some(xy));
+        output(board, is_whites_move, false, Some(xy));
         io::stdout().flush().unwrap();
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Invalid input");
