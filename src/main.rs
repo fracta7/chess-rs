@@ -13,7 +13,16 @@ fn main() {
         x: 3,
         y: 6,
         dx: 3,
-        dy: 4,
+        dy: 1,
+    };
+    board.move_piece(&mv);
+    println!();
+    board.print();
+    let mv = Movement {
+        x: 0,
+        y: 0,
+        dx: 4,
+        dy: 7,
     };
     board.move_piece(&mv);
     println!();

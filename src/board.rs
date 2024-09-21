@@ -93,6 +93,27 @@ impl Board {
                 color::Fg(color::Reset),
                 style::Reset
             );
+            if i == 0 {
+                let white_captured: Vec<&Piece> = self
+                    .captured_pieces
+                    .iter()
+                    .filter(|&&x| x.get_color().unwrap() == Color::Black)
+                    .collect();
+                print!("\tWhite captured pieces: ");
+                for i in white_captured {
+                    print!("{}", i.to_emoji());
+                }
+            } else if i == 7 {
+                let black_captured: Vec<&Piece> = self
+                    .captured_pieces
+                    .iter()
+                    .filter(|&&x| x.get_color().unwrap() == Color::White)
+                    .collect();
+                print!("\tBlack captured pieces: ");
+                for i in black_captured {
+                    print!("{}", i.to_emoji());
+                }
+            }
             println!();
         }
         print_number_row();
