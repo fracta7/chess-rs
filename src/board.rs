@@ -107,7 +107,7 @@ impl Board {
                     .iter()
                     .filter(|&&x| x.get_color().unwrap() == Color::Black)
                     .collect();
-                print!("\tWhite captured pieces: ");
+                print!("\t");
                 for i in white_captured {
                     print!("{}", i.to_emoji());
                 }
@@ -117,7 +117,7 @@ impl Board {
                     .iter()
                     .filter(|&&x| x.get_color().unwrap() == Color::White)
                     .collect();
-                print!("\tBlack captured pieces: ");
+                print!("\t");
                 for i in black_captured {
                     print!("{}", i.to_emoji());
                 }
@@ -139,9 +139,9 @@ impl Board {
 
 // returns x and y coordinates based on letter and number coordinates
 pub fn get_xy(xy: &str) -> (usize, usize) {
-    let x_char = xy.chars().nth(0).unwrap();
-    let y_char = xy.chars().nth(1).unwrap();
-    let x = match x_char {
+    let x_char = xy.chars().nth(1).unwrap();
+    let y_char = xy.chars().nth(0).unwrap();
+    let y = match y_char {
         'a' => 0,
         'b' => 1,
         'c' => 2,
@@ -152,7 +152,7 @@ pub fn get_xy(xy: &str) -> (usize, usize) {
         'h' => 7,
         _ => 8,
     };
-    let y = match y_char {
+    let x = match x_char {
         '1' => 0,
         '2' => 1,
         '3' => 2,
