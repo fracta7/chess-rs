@@ -16,17 +16,6 @@ pub enum Piece {
 }
 
 impl Piece {
-    pub fn to_number(&self) -> usize {
-        match self {
-            Piece::Empty => 0,
-            Piece::Pawn(_) => 1,
-            Piece::Rook(_) => 2,
-            Piece::Knight(_) => 3,
-            Piece::Bishop(_) => 4,
-            Piece::Queen(_) => 5,
-            Piece::King(_) => 6,
-        }
-    }
     pub fn to_emoji(&self) -> String {
         let emoji = match self {
             Piece::Empty => " ".to_string(),

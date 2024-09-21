@@ -11,15 +11,15 @@ pub struct Movement {
     pub dy: usize,
 }
 
-pub fn can_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
-    match board.board[mv.x][mv.y] {
+pub fn can_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
+    match board.board[mv.y][mv.x] {
         Piece::Empty => return false,
-        Piece::Pawn(_) => return can_pawn_move(board, mv, is_white),
-        Piece::Rook(_) => return can_rook_move(board, mv, is_white),
-        Piece::Knight(_) => return can_knight_move(board, mv, is_white),
-        Piece::Bishop(_) => return can_bishop_move(board, mv, is_white),
-        Piece::Queen(_) => return can_queen_move(board, mv, is_white),
-        Piece::King(_) => return can_king_move(board, mv, is_white),
+        Piece::Pawn(_) => return can_pawn_move(board, mv, is_white, no_check),
+        Piece::Rook(_) => return can_rook_move(board, mv, is_white, no_check),
+        Piece::Knight(_) => return can_knight_move(board, mv, is_white, no_check),
+        Piece::Bishop(_) => return can_bishop_move(board, mv, is_white, no_check),
+        Piece::Queen(_) => return can_queen_move(board, mv, is_white, no_check),
+        Piece::King(_) => return can_king_move(board, mv, is_white, no_check),
     }
 }
 
@@ -30,7 +30,7 @@ fn is_opponent_piece(board: &Board, mv: &Movement, is_white: bool) -> bool {
     }
 }
 
-fn can_pawn_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
+fn can_pawn_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
     let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let forward_move = if is_white { mv.y > mv.dy } else { mv.y < mv.dy };
     let is_first_move = (is_white && mv.y == 6) || (!is_white && mv.y == 1);
@@ -53,13 +53,13 @@ fn can_pawn_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
         || (is_move_forward && is_empty);
     let mut will_result_check = false;
 
-    if can_move {
+    if can_move && !no_check {
         let mut temp_board = board.clone();
         temp_board.move_piece(mv);
         will_result_check = is_check(&temp_board, is_white);
     }
 
-    can_move && !will_result_check
+    can_move //&& !will_result_check
 }
 
 fn is_obstacle_rook(board: &Board, mv: &Movement, is_move_x: bool, is_move_y: bool) -> bool {
@@ -93,7 +93,7 @@ fn is_obstacle_rook(board: &Board, mv: &Movement, is_move_x: bool, is_move_y: bo
     obstacle_found
 }
 
-fn can_rook_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
+fn can_rook_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
     let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let is_move_x = mv.dx == mv.x && mv.dy != mv.y;
     let is_move_y = mv.dy == mv.y && mv.dx != mv.x;
@@ -103,28 +103,28 @@ fn can_rook_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
         is_legal_move && !obstacle_found && (is_empty || is_opponent_piece(board, mv, is_white));
     let mut will_result_check = false;
 
-    if can_move {
+    if can_move && !no_check {
         let mut temp_board = board.clone();
         temp_board.move_piece(mv);
         will_result_check = is_check(&temp_board, is_white);
     }
 
-    can_move && !will_result_check
+    can_move //&& !will_result_check
 }
 
-fn can_knight_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
+fn can_knight_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
     let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let move_x = mv.dx.abs_diff(mv.x);
     let move_y = mv.dy.abs_diff(mv.y);
     let legal_move = (move_x == 2 && move_y == 1) || (move_x == 1 && move_y == 2);
     let can_move = legal_move && (is_empty || is_opponent_piece(board, mv, is_white));
     let mut will_result_check = false;
-    if can_move {
+    if can_move && !no_check {
         let mut temp_board = board.clone();
         temp_board.move_piece(mv);
         will_result_check = is_check(&temp_board, is_white);
     }
-    can_move && !will_result_check
+    can_move //&& !will_result_check
 }
 
 fn is_obstacle_bishop(board: &Board, mv: &Movement) -> bool {
@@ -146,7 +146,7 @@ fn is_obstacle_bishop(board: &Board, mv: &Movement) -> bool {
     false // No obstacles found
 }
 
-fn can_bishop_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
+fn can_bishop_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
     let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let legal_move = mv.dx.abs_diff(mv.x) == mv.dy.abs_diff(mv.y);
     let obstacle_found = is_obstacle_bishop(board, mv);
@@ -154,38 +154,39 @@ fn can_bishop_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
         legal_move && !obstacle_found && (is_empty || is_opponent_piece(board, mv, is_white));
     let mut will_result_check = false;
 
-    if can_move {
+    if can_move && !no_check {
         let mut temp_board = board.clone();
         temp_board.move_piece(mv);
         will_result_check = is_check(&temp_board, is_white);
     }
 
-    can_move && !will_result_check
+    can_move //&& !will_result_check
 }
 
-fn can_queen_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
-    let can_move = can_rook_move(board, mv, is_white) || can_bishop_move(board, mv, is_white);
+fn can_queen_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
+    let can_move = can_rook_move(board, mv, is_white, no_check)
+        || can_bishop_move(board, mv, is_white, no_check);
     let mut will_result_check = false;
-    if can_move {
+    if can_move && !no_check {
         let mut temp_board = board.clone();
         temp_board.move_piece(mv);
         will_result_check = is_check(&temp_board, is_white);
     }
-    can_move && !will_result_check
+    can_move // && !will_result_check
 }
 
-fn can_king_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
+fn can_king_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
     let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let legal_move = mv.dx.abs_diff(mv.x) <= 1 && mv.dy.abs_diff(mv.y) <= 1;
     let can_move = legal_move && (is_empty || is_opponent_piece(board, mv, is_white));
     let mut will_result_check = false;
-    if can_move {
+    if can_move & !no_check {
         let mut temp_board = board.clone();
         temp_board.move_piece(mv);
         will_result_check = is_check(&temp_board, is_white);
     }
 
-    can_move && !will_result_check
+    can_move //&& !will_result_check
 }
 
 fn get_king_pos(board: &Board, is_white: bool) -> (usize, usize) {
@@ -198,8 +199,8 @@ fn get_king_pos(board: &Board, is_white: bool) -> (usize, usize) {
 
     for i in 0..8 {
         for j in 0..8 {
-            if board.board[j][i] == king_piece {
-                pos = (i, j);
+            if board.board[i][j] == king_piece {
+                pos = (j, i);
                 break;
             }
         }
@@ -212,13 +213,13 @@ pub fn is_check(board: &Board, is_white: bool) -> bool {
     for i in 0..8 {
         for j in 0..8 {
             let mv = Movement {
-                x: i,
-                y: j,
+                x: j,
+                y: i,
                 dx: king_pos.0,
                 dy: king_pos.1,
             };
             // we inverse is_white to check for opponent pieces
-            let can_capture_king = can_move(board, &mv, !is_white);
+            let can_capture_king = can_move(board, &mv, !is_white, true);
             if can_capture_king {
                 return true;
             }
@@ -244,10 +245,10 @@ pub fn is_checkmate(board: &Board, is_white: bool) -> bool {
 
             for dy in 0..8 {
                 for dx in 0..8 {
-                    let mv = Movement { x: i, y: j, dx, dy };
+                    let mv = Movement { x: j, y: i, dx, dy };
 
                     // Check if the move is valid
-                    if can_move(board, &mv, is_white) {
+                    if can_move(board, &mv, is_white, false) {
                         // Simulate the move
                         let mut temp_board = board.clone();
                         temp_board.move_piece(&mv);

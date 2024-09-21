@@ -61,14 +61,14 @@ pub fn input_loop(board: &mut Board) {
             dx: dxy.0,
             dy: dxy.1,
         };
-        let movable = can_move(&board, &mv, is_whites_move);
+        let movable = can_move(&board, &mv, is_whites_move, false);
         if movable {
             board.move_piece(&mv);
             is_whites_move = !is_whites_move;
         }
-        if is_checkmate(&board, is_whites_move) {
-            println!("{} wins!", side);
-            break;
-        }
+        // if is_checkmate(&board, is_whites_move) {
+        //     println!("{} wins!", side);
+        //     break;
+        // }
     }
 }

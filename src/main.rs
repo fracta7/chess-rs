@@ -1,4 +1,4 @@
-use board::Board;
+use board::{get_xy, Board};
 use input::input_loop;
 mod board;
 mod game;

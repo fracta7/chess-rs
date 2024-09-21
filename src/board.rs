@@ -61,10 +61,10 @@ impl Board {
     }
 }
 
-// returns x and y coordinates based on letter and number coordinates
+// Returns x and y coordinates based on letter and number coordinates
 pub fn get_xy(xy: &str) -> (usize, usize) {
-    if let Some(x_char) = xy.chars().nth(1) {
-        if let Some(y_char) = xy.chars().nth(0) {
+    if let Some(y_char) = xy.chars().nth(0) {
+        if let Some(x_char) = xy.chars().nth(1) {
             let y = match y_char {
                 'a' => 0,
                 'b' => 1,
@@ -88,10 +88,7 @@ pub fn get_xy(xy: &str) -> (usize, usize) {
                 _ => 8,
             };
             return (x, y);
-        } else {
-            return (8, 8);
         }
-    } else {
-        return (8, 8);
     }
+    (8, 8) // Invalid coordinate
 }

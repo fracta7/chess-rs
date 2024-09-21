@@ -30,7 +30,7 @@ impl Board {
                     );
                 }
                 if xy.is_some() {
-                    if xy.unwrap().1 == j && xy.unwrap().0 == i && highlight {
+                    if xy.unwrap().1 == i && xy.unwrap().0 == j && highlight {
                         print!(
                             "{}{}{}{}{}{}{}",
                             color::Fg(color::Black),
