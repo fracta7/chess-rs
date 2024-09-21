@@ -64,6 +64,16 @@ impl Board {
                 style::Reset
             );
             for j in 0..8 {
+                if j == 0 {
+                    print!(
+                        "{}{}{}|{}{}",
+                        style::Underline,
+                        color::Fg(color::LightBlack),
+                        color::Bg(color::LightWhite),
+                        color::Bg(color::Reset),
+                        style::Reset
+                    );
+                }
                 print!(
                     "{}{}{}{}{}{}",
                     color::Fg(color::Black),
@@ -74,16 +84,14 @@ impl Board {
                     style::Reset
                 );
 
-                if j != 7 {
-                    print!(
-                        "{}{}{}|{}{}",
-                        style::Underline,
-                        color::Fg(color::LightBlack),
-                        color::Bg(color::LightWhite),
-                        color::Bg(color::Reset),
-                        style::Reset
-                    );
-                }
+                print!(
+                    "{}{}{}|{}{}",
+                    style::Underline,
+                    color::Fg(color::LightBlack),
+                    color::Bg(color::LightWhite),
+                    color::Bg(color::Reset),
+                    style::Reset
+                );
             }
             print!(
                 "{}{} {} {}{}",
@@ -177,7 +185,7 @@ fn print_number_row() {
     for i in 0..=8 {
         if i == 0 {
             print!(
-                "{}{}   {}{}",
+                "{}{}    {}{}",
                 style::Invert,
                 color::Fg(color::LightCyan),
                 color::Fg(color::Reset),
@@ -195,7 +203,7 @@ fn print_number_row() {
         );
     }
     print!(
-        "{}{}  {}{}",
+        "{}{}   {}{}",
         style::Invert,
         color::Fg(color::LightCyan),
         color::Fg(color::Reset),
