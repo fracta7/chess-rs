@@ -1,4 +1,4 @@
-use board::{get_xy, Board};
+use board::Board;
 use game::Movement;
 
 mod board;

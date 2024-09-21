@@ -53,10 +53,11 @@ impl Board {
 
     // prints the board to the terminal
     pub fn print(&self) {
+        print_number_row();
         for i in 0..8 {
             print!(
-                "{}{}{} {}{}",
-                style::Blink,
+                "{}{} {} {}{}",
+                style::Invert,
                 color::Fg(color::LightCyan),
                 get_letter(i),
                 color::Fg(color::Reset),
@@ -65,7 +66,7 @@ impl Board {
             for j in 0..8 {
                 print!(
                     "{}{}{}{}{}{}",
-                    color::Fg(color::Red),
+                    color::Fg(color::Black),
                     style::Underline,
                     color::Bg(color::LightWhite),
                     self.board[i][j].to_emoji(),
@@ -75,29 +76,26 @@ impl Board {
 
                 if j != 7 {
                     print!(
-                        "{}{}|{}{}",
+                        "{}{}{}|{}{}",
                         style::Underline,
+                        color::Fg(color::LightBlack),
                         color::Bg(color::LightWhite),
                         color::Bg(color::Reset),
                         style::Reset
                     );
                 }
             }
+            print!(
+                "{}{} {} {}{}",
+                style::Invert,
+                color::Fg(color::LightCyan),
+                get_letter(i),
+                color::Fg(color::Reset),
+                style::Reset
+            );
             println!();
         }
-        for i in 0..=8 {
-            if i == 0 {
-                print!("  ");
-                continue;
-            }
-            print!(
-                "{}{} {}",
-                color::Fg(color::LightCyan),
-                i,
-                color::Fg(color::Reset),
-            );
-        }
-        println!()
+        print_number_row();
     }
 
     pub fn move_piece(&mut self, mv: &Movement) {
@@ -152,4 +150,35 @@ fn get_letter(y: usize) -> String {
         _ => panic!("Incorrect coordinates!"),
     };
     letter.to_string()
+}
+
+fn print_number_row() {
+    for i in 0..=8 {
+        if i == 0 {
+            print!(
+                "{}{}   {}{}",
+                style::Invert,
+                color::Fg(color::LightCyan),
+                color::Fg(color::Reset),
+                style::Reset
+            );
+            continue;
+        }
+        print!(
+            "{}{}{} {}{}",
+            style::Invert,
+            color::Fg(color::LightCyan),
+            i,
+            color::Fg(color::Reset),
+            style::Reset
+        );
+    }
+    print!(
+        "{}{}  {}{}",
+        style::Invert,
+        color::Fg(color::LightCyan),
+        color::Fg(color::Reset),
+        style::Reset
+    );
+    println!()
 }
