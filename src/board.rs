@@ -23,30 +23,26 @@ impl Board {
     // sets up the board with default position
     pub fn init_new(&mut self) {
         // Black pieces
-        let back_rank_black = [
-            Piece::Rook(Color::Black),
-            Piece::Knight(Color::Black),
-            Piece::Bishop(Color::Black),
-            Piece::King(Color::Black),
-            Piece::Queen(Color::Black),
-            Piece::Bishop(Color::Black),
-            Piece::Knight(Color::Black),
-            Piece::Rook(Color::Black),
-        ];
-        let back_rank_white = [
-            Piece::Rook(Color::White),
-            Piece::Knight(Color::White),
-            Piece::Bishop(Color::White),
-            Piece::King(Color::White),
-            Piece::Queen(Color::White),
-            Piece::Bishop(Color::White),
-            Piece::Knight(Color::White),
-            Piece::Rook(Color::White),
-        ];
+        self.board[0][0] = Piece::Rook(Color::Black);
+        self.board[0][1] = Piece::Knight(Color::Black);
+        self.board[0][2] = Piece::Bishop(Color::Black);
+        self.board[0][3] = Piece::King(Color::Black);
+        self.board[0][4] = Piece::Queen(Color::Black);
+        self.board[0][5] = Piece::Bishop(Color::Black);
+        self.board[0][6] = Piece::Knight(Color::Black);
+        self.board[0][7] = Piece::Rook(Color::Black);
 
-        self.board[0] = back_rank_black.to_vec();
-        self.board[7] = back_rank_white.to_vec();
+        // White pieces
+        self.board[7][0] = Piece::Rook(Color::White);
+        self.board[7][1] = Piece::Knight(Color::White);
+        self.board[7][2] = Piece::Bishop(Color::White);
+        self.board[7][3] = Piece::King(Color::White);
+        self.board[7][4] = Piece::Queen(Color::White);
+        self.board[7][5] = Piece::Bishop(Color::White);
+        self.board[7][6] = Piece::Knight(Color::White);
+        self.board[7][7] = Piece::Rook(Color::White);
 
+        // Pawns
         for i in 0..8 {
             self.board[1][i] = Piece::Pawn(Color::Black);
             self.board[6][i] = Piece::Pawn(Color::White);
@@ -67,12 +63,12 @@ impl Board {
     }
 
     pub fn move_piece(&mut self, mv: &Movement) {
-        let piece = self.board[mv.x][mv.y].clone();
-        self.board[mv.x][mv.y] = Piece::Empty;
-        if self.board[mv.dx][mv.dy] != Piece::Empty {
-            self.captured_pieces.push(self.board[mv.dx][mv.dy].clone());
+        let piece = self.board[mv.y][mv.x].clone();
+        self.board[mv.y][mv.x] = Piece::Empty;
+        if self.board[mv.dy][mv.dx] != Piece::Empty {
+            self.captured_pieces.push(self.board[mv.dy][mv.dx].clone());
         }
-        self.board[mv.dx][mv.dy] = piece;
+        self.board[mv.dy][mv.dx] = piece;
     }
 }
 

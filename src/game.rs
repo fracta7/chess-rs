@@ -24,14 +24,14 @@ pub fn can_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
 }
 
 fn is_opponent_piece(board: &Board, mv: &Movement, is_white: bool) -> bool {
-    match board.board[mv.dx][mv.dy].get_color() {
+    match board.board[mv.dy][mv.dx].get_color() {
         Some(color) => color != (if is_white { Color::White } else { Color::Black }),
         None => false,
     }
 }
 
 fn can_pawn_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
-    let is_empty = board.board[mv.dx][mv.dy] == Piece::Empty;
+    let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let forward_move = if is_white { mv.y > mv.dy } else { mv.y < mv.dy };
     let is_first_move = (is_white && mv.y == 6) || (!is_white && mv.y == 1);
     let legal_first_move = is_first_move && mv.dx == mv.x && mv.dy.abs_diff(mv.y) == 2;
@@ -39,7 +39,7 @@ fn can_pawn_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
     if legal_first_move && forward_move {
         let start = if is_white { mv.y - 1 } else { mv.y + 1 };
         for i in start..mv.dy {
-            if board.board[mv.x][i] != Piece::Empty {
+            if board.board[i][mv.x] != Piece::Empty {
                 obstacles_found = true;
                 break;
             }
@@ -72,7 +72,7 @@ fn is_obstacle_rook(board: &Board, mv: &Movement, is_move_x: bool, is_move_y: bo
             (mv.dy + 1, mv.y)
         };
         for i in start..end {
-            if board.board[mv.x][i] != Piece::Empty {
+            if board.board[i][mv.x] != Piece::Empty {
                 obstacle_found = true;
                 break;
             }
@@ -84,7 +84,7 @@ fn is_obstacle_rook(board: &Board, mv: &Movement, is_move_x: bool, is_move_y: bo
             (mv.dx + 1, mv.x)
         };
         for i in start..end {
-            if board.board[i][mv.y] != Piece::Empty {
+            if board.board[mv.y][i] != Piece::Empty {
                 obstacle_found = true;
                 break;
             }
@@ -94,7 +94,7 @@ fn is_obstacle_rook(board: &Board, mv: &Movement, is_move_x: bool, is_move_y: bo
 }
 
 fn can_rook_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
-    let is_empty = board.board[mv.dx][mv.dy] == Piece::Empty;
+    let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let is_move_x = mv.dx == mv.x && mv.dy != mv.y;
     let is_move_y = mv.dy == mv.y && mv.dx != mv.x;
     let is_legal_move = is_move_x || is_move_y;
@@ -113,7 +113,7 @@ fn can_rook_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
 }
 
 fn can_knight_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
-    let is_empty = board.board[mv.dx][mv.dy] == Piece::Empty;
+    let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let move_x = mv.dx.abs_diff(mv.x);
     let move_y = mv.dy.abs_diff(mv.y);
     let legal_move = (move_x == 2 && move_y == 1) || (move_x == 1 && move_y == 2);
@@ -139,7 +139,7 @@ fn is_obstacle_bishop(board: &Board, mv: &Movement) -> bool {
         x += step_x;
         y += step_y;
 
-        if board.board[x as usize][y as usize] != Piece::Empty {
+        if board.board[y as usize][x as usize] != Piece::Empty {
             return true; // Obstacle found
         }
     }
@@ -147,7 +147,7 @@ fn is_obstacle_bishop(board: &Board, mv: &Movement) -> bool {
 }
 
 fn can_bishop_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
-    let is_empty = board.board[mv.dx][mv.dy] == Piece::Empty;
+    let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let legal_move = mv.dx.abs_diff(mv.x) == mv.dy.abs_diff(mv.y);
     let obstacle_found = is_obstacle_bishop(board, mv);
     let can_move =
@@ -175,7 +175,7 @@ fn can_queen_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
 }
 
 fn can_king_move(board: &Board, mv: &Movement, is_white: bool) -> bool {
-    let is_empty = board.board[mv.dx][mv.dy] == Piece::Empty;
+    let is_empty = board.board[mv.dy][mv.dx] == Piece::Empty;
     let legal_move = mv.dx.abs_diff(mv.x) <= 1 && mv.dy.abs_diff(mv.y) <= 1;
     let can_move = legal_move && (is_empty || is_opponent_piece(board, mv, is_white));
     let mut will_result_check = false;
@@ -198,7 +198,7 @@ fn get_king_pos(board: &Board, is_white: bool) -> (usize, usize) {
 
     for i in 0..8 {
         for j in 0..8 {
-            if board.board[i][j] == king_piece {
+            if board.board[j][i] == king_piece {
                 pos = (i, j);
                 break;
             }

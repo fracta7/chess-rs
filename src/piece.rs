@@ -4,20 +4,19 @@ pub enum Color {
     Black,
 }
 
-#[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Piece {
-    Empty = 0,
-    Pawn(Color) = 1,
-    Rook(Color) = 2,
-    Knight(Color) = 3,
-    Bishop(Color) = 4,
-    Queen(Color) = 5,
-    King(Color) = 6,
+    Empty,
+    Pawn(Color),
+    Rook(Color),
+    Knight(Color),
+    Bishop(Color),
+    Queen(Color),
+    King(Color),
 }
 
 impl Piece {
-    pub fn to_number(&self) -> u8 {
+    pub fn to_number(&self) -> usize {
         match self {
             Piece::Empty => 0,
             Piece::Pawn(_) => 1,
