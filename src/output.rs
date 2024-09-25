@@ -1,3 +1,5 @@
+#![allow(warnings)]
+
 use termion::{color, style};
 
 use crate::{

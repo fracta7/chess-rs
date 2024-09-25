@@ -1,3 +1,5 @@
+#![allow(warnings)]
+
 use std::io::{self, Write};
 
 use crate::{

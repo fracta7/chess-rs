@@ -1,3 +1,5 @@
+#![allow(warnings)]
+
 use crate::{
     board::Board,
     piece::{Color, Piece},
@@ -46,8 +48,10 @@ fn can_pawn_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -
         }
     }
     let is_move_forward = forward_move && mv.dx == mv.x && mv.dy.abs_diff(mv.y) == 1;
-    let can_capture =
-        forward_move && mv.dx.abs_diff(mv.x) == 1 && is_opponent_piece(board, mv, is_white);
+    let can_capture = forward_move
+        && mv.dy.abs_diff(mv.y) == 1
+        && mv.dx.abs_diff(mv.x) == 1
+        && is_opponent_piece(board, mv, is_white);
     let can_move = (legal_first_move && is_empty && !obstacles_found)
         || can_capture
         || (is_move_forward && is_empty);
@@ -59,7 +63,7 @@ fn can_pawn_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -
         will_result_check = is_check(&temp_board, is_white);
     }
 
-    can_move //&& !will_result_check
+    can_move && !will_result_check
 }
 
 fn is_obstacle_rook(board: &Board, mv: &Movement, is_move_x: bool, is_move_y: bool) -> bool {
@@ -109,7 +113,7 @@ fn can_rook_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -
         will_result_check = is_check(&temp_board, is_white);
     }
 
-    can_move //&& !will_result_check
+    can_move && !will_result_check
 }
 
 fn can_knight_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
@@ -124,7 +128,7 @@ fn can_knight_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool)
         temp_board.move_piece(mv);
         will_result_check = is_check(&temp_board, is_white);
     }
-    can_move //&& !will_result_check
+    can_move && !will_result_check
 }
 
 fn is_obstacle_bishop(board: &Board, mv: &Movement) -> bool {
@@ -160,7 +164,7 @@ fn can_bishop_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool)
         will_result_check = is_check(&temp_board, is_white);
     }
 
-    can_move //&& !will_result_check
+    can_move && !will_result_check
 }
 
 fn can_queen_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
@@ -172,7 +176,7 @@ fn can_queen_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) 
         temp_board.move_piece(mv);
         will_result_check = is_check(&temp_board, is_white);
     }
-    can_move // && !will_result_check
+    can_move && !will_result_check
 }
 
 fn can_king_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -> bool {
@@ -186,18 +190,22 @@ fn can_king_move(board: &Board, mv: &Movement, is_white: bool, no_check: bool) -
         will_result_check = is_check(&temp_board, is_white);
     }
 
-    can_move //&& !will_result_check
+    can_move && !will_result_check
 }
 
-fn get_king_pos(board: &Board, is_white: bool) -> (usize, usize) {
+pub fn get_king_pos(board: &Board, is_white: bool) -> (usize, usize) {
     let mut pos = (0, 0);
     let king_piece = if is_white {
         Piece::King(Color::White)
     } else {
         Piece::King(Color::Black)
     };
+    let mut king_found = false;
 
     for i in 0..8 {
+        if king_found {
+            break;
+        }
         for j in 0..8 {
             if board.board[i][j] == king_piece {
                 pos = (j, i);
@@ -212,6 +220,12 @@ pub fn is_check(board: &Board, is_white: bool) -> bool {
     let king_pos = get_king_pos(board, is_white);
     for i in 0..8 {
         for j in 0..8 {
+            let piece = board.board[i][j];
+            let own = piece.get_color() == Some(if is_white { Color::White } else { Color::Black });
+
+            if piece == Piece::Empty || own {
+                continue;
+            }
             let mv = Movement {
                 x: j,
                 y: i,
