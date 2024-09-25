@@ -5,7 +5,7 @@ use crate::{
     piece::{Color, Piece},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Movement {
     pub x: usize,
     pub y: usize,
@@ -252,7 +252,7 @@ pub fn is_checkmate(board: &Board, is_white: bool) -> bool {
             let piece = board.board[i][j];
 
             if piece == Piece::Empty
-                || piece.get_color() != Some(if is_white { Color::White } else { Color::Black })
+                || piece.get_color() == Some(if is_white { Color::White } else { Color::Black })
             {
                 continue;
             }

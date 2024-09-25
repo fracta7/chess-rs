@@ -11,6 +11,8 @@ use termion::{color, style};
 pub struct Board {
     pub board: Vec<Vec<Piece>>,
     pub captured_pieces: Vec<Piece>,
+    pub white_mv_history: Vec<Movement>,
+    pub black_mv_history: Vec<Movement>,
 }
 
 impl Board {
@@ -19,6 +21,8 @@ impl Board {
         let board = Board {
             board: vec![vec![Piece::Empty; 8]; 8],
             captured_pieces: vec![],
+            white_mv_history: vec![],
+            black_mv_history: vec![],
         };
 
         return board;
@@ -60,6 +64,13 @@ impl Board {
             self.captured_pieces.push(self.board[mv.dy][mv.dx].clone());
         }
         self.board[mv.dy][mv.dx] = piece;
+    }
+    pub fn add_mv(&mut self, mv: &Movement, is_white: bool) {
+        if is_white {
+            self.white_mv_history.push(mv.clone());
+        } else {
+            self.black_mv_history.push(mv.clone());
+        }
     }
 }
 

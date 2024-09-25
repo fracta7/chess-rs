@@ -65,11 +65,12 @@ pub fn input_loop(board: &mut Board) {
         let movable = can_move(&board, &mv, is_whites_move, false);
         if movable {
             board.move_piece(&mv);
+            board.add_mv(&mv, is_whites_move);
             is_whites_move = !is_whites_move;
         }
-        // if is_checkmate(&board, is_whites_move) {
-        //     println!("{} wins!", side);
-        //     break;
-        // }
+        if is_checkmate(&board, !is_whites_move) {
+            println!("{} wins!", if is_whites_move { "white" } else { "black" });
+            break;
+        }
     }
 }
